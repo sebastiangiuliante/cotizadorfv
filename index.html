@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador Fotovoltaico</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #f4f4f9; color: #333; }
+        .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        select, input { padding: 8px; width: 100%; margin-top: 5px; margin-bottom: 15px; box-sizing: border-box; }
+        h1 { color: #0284c7; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Cotizador Solar FV</h1>
+        <p>Seleccioná los componentes cargados en el archivo CSV:</p>
+        
+        <label for="select-componentes">Componente:</label>
+        <select id="select-componentes">
+            <option value="">Cargando base de datos...</option>
+        </select>
+
+        <div id="detalle-precio" style="font-weight: bold; margin-top: 10px;"></div>
+    </div>
+
+    <script>
+        async function cargarBaseDeDatos() {
+            try {
+                // Usamos la URL RAW de GitHub para evitar bloqueos de CORS o pantallas de descarga
+                const urlCSV = 'https://raw.githubusercontent.com/sebastiangiuliante/cotizadorfv/main/paneles_inversores.csv';
+                const respuesta = await fetch(urlCSV);
+                const texto = await respuesta.text();
+                
+                // Parseo básico de CSV separando por líneas y comas
+                const lineas = texto.trim().split('\n');
+                const select = document.getElementById('select-componentes');
+                select.innerHTML = '<option value="">-- Seleccioná un componente --</option>';
+
+                // Arrancamos en 1 para saltear la cabecera
+                for (let i = 1; i < lineas.length; i++) {
+                    const [tipo, marca_modelo, potencia_w, precio_usd] = lineas[i].split(',');
+                    const option = document.createElement('option');
+                    option.value = precio_usd;
+                    option.textContent = `${marca_modelo} (${tipo}) - $${precio_usd} USD`;
+                    select.appendChild(option);
+                }
+
+                select.addEventListener('change', (e) => {
+                    const precio = e.target.value;
+                    const detalle = document.getElementById('detalle-precio');
+                    if (precio) {
+                        detalle.textContent = `Precio unitario: $${precio} USD`;
+                    } else {
+                        detalle.textContent = '';
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error al cargar el CSV:", error);
+                document.getElementById('select-componentes').innerHTML = '<option value="">Error al cargar los datos</option>';
+            }
+        }
+
+        cargarBaseDeDatos();
+    </script>
+</body>
+</html>
