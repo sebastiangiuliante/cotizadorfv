@@ -1,0 +1,6 @@
+tipo,marca_modelo,potencia_w,precio_usd
+panel,Jinko Solar 550W Bifacial,550,145
+panel,Longi Solar 580W Mono,580,160
+inversor,Huawei SUN2000-5KTL-L1,5000,1200
+inversor,Huawei SUN2000-8KTL-M1,8000,1650
+proteccion,Suntree DPS DC 1000V,0,45
