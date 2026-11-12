@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizador Solar Pro - Asistente Fotovoltaico</title>
+    <title>Cotizador Solar - Giuliante Soluciones Energéticas</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Font Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter & Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Estilos personalizados externos -->
@@ -17,23 +19,31 @@
 
     <!-- Header Principal -->
     <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="bg-brand-500 text-slate-950 p-2.5 rounded-xl shadow-lg flex items-center justify-center">
-                    <i class="fa-solid fa-sun text-2xl text-slate-950"></i>
-                </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-4">
+            <!-- Logo GSE y Nombre del Proyecto -->
+            <div class="flex items-center gap-3 sm:gap-5">
+                <a href="#" onclick="clickBotonAsistenteGuiado(); return false;" class="flex items-center gap-2 sm:gap-2.5 shrink-0 group" title="Giuliante Soluciones Energéticas">
+                    <img src="assets/logo-icon-transparent.png" alt="Logo GSE" class="h-9 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105">
+                    <img src="assets/logo-text-transparent.png" alt="Giuliante Soluciones Energéticas" class="h-6 sm:h-8 w-auto object-contain">
+                </a>
+                <div class="hidden sm:block h-8 w-px bg-slate-700/80"></div>
                 <div>
-                    <h1 class="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-2">
-                        SolarQuote <span class="text-brand-400 font-semibold text-xs sm:text-sm bg-brand-500/10 px-2.5 py-0.5 rounded-full border border-brand-400/30">Asistente Pro</span>
+                    <h1 class="text-base sm:text-xl font-black tracking-tight text-white flex items-center gap-2">
+                        Cotizador Solar <span class="text-brand-400 font-semibold text-xs sm:text-sm bg-brand-500/10 px-2.5 py-0.5 rounded-full border border-brand-400/30">GSE Pro</span>
                     </h1>
-                    <p class="text-xs text-slate-400">Dimensionador & Cotizador comercial sincronizado con catálogo remoto</p>
+                    <p class="text-[11px] sm:text-xs text-slate-400">Dimensionador & cotizador comercial fotovoltaico</p>
                 </div>
             </div>
 
             <!-- Navegación y Acciones -->
             <div class="flex items-center space-x-2">
-                <button onclick="setVista('wizard')" id="btn-vista-wizard" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-brand-500 text-slate-950 shadow-md flex items-center gap-2">
+                <button onclick="clickBotonAsistenteGuiado()" id="btn-vista-wizard" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-brand-500 text-slate-950 shadow-md flex items-center gap-2 hover:bg-brand-400">
                     <i class="fa-solid fa-wand-magic-sparkles"></i><span>Asistente Guiado</span>
+                </button>
+                <button onclick="abrirModalPresupuestos()" id="btn-abrir-guardados" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-slate-800 text-slate-300 hover:text-white flex items-center gap-2 border border-slate-700">
+                    <i class="fa-solid fa-folder-open text-brand-400"></i>
+                    <span class="hidden sm:inline">Presupuestos</span>
+                    <span id="badge-cant-guardados" class="bg-slate-700 text-brand-400 text-[11px] font-bold px-1.5 py-0.5 rounded-full">0</span>
                 </button>
                 <button onclick="setVista('catalogo')" id="btn-vista-catalogo" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-slate-800 text-slate-300 hover:text-white flex items-center gap-2">
                     <i class="fa-solid fa-database"></i><span>Base de Datos</span>
@@ -41,6 +51,33 @@
             </div>
         </div>
     </header>
+
+    <!-- Modal Buscador de Presupuestos Guardados -->
+    <div id="modal-presupuestos" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-folder-open text-brand-400 text-lg"></i>
+                    <div>
+                        <h3 class="font-black text-base">Presupuestos Guardados</h3>
+                        <p class="text-[11px] text-slate-400">Buscá rápidamente por nombre de cliente, código o localidad</p>
+                    </div>
+                </div>
+                <button onclick="cerrarModalPresupuestos()" class="text-slate-400 hover:text-white p-1.5 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-4 border-b border-slate-100 bg-slate-50">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="input-buscar-presupuesto" oninput="renderizarListaPresupuestos(this.value)" placeholder="Buscar por cliente (ej: Juan Pérez), código (GSE-001) o proyecto..." class="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+            </div>
+            <div id="lista-presupuestos-body" class="p-4 overflow-y-auto space-y-2.5 flex-1">
+                <!-- Se puebla dinámicamente -->
+            </div>
+        </div>
+    </div>
 
     <!-- Notificaciones flotantes / Toast -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
@@ -85,36 +122,83 @@
                     <p class="text-slate-500 text-sm mt-1">Elegí la escala o aplicación del proyecto solar que vas a presupuestar.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                    <div onclick="selectTipoProyecto('residencial')" id="card-tipo-residencial" class="tipo-card group cursor-pointer border-2 border-slate-200 rounded-3xl p-6 text-center hover:border-brand-500 hover:shadow-lg transition-all duration-200 bg-white">
-                        <div class="w-16 h-16 rounded-2xl bg-amber-100 group-hover:bg-brand-500 text-amber-600 group-hover:text-slate-950 mx-auto flex items-center justify-center text-3xl mb-4 transition">
-                            <i class="fa-solid fa-house-chimney-window"></i>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
+                    <!-- Residencial -->
+                    <div onclick="selectTipoProyecto('residencial')" id="card-tipo-residencial" class="tipo-card group cursor-pointer border-2 border-slate-200 rounded-3xl p-5 text-center hover:border-brand-500 hover:shadow-lg transition-all duration-200 bg-white flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-amber-100 group-hover:bg-brand-500 text-amber-600 group-hover:text-slate-950 mx-auto flex items-center justify-center text-2xl mb-3 transition">
+                                <i class="fa-solid fa-house-chimney-window"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-slate-900 mb-1">Residencial</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3">Viviendas unifamiliares, PHs y pequeños consumos.</p>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-900 mb-1">Residencial</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed mb-3">Viviendas unifamiliares, PHs y pequeños comercios. Rangos típicos hasta 99 kW.</p>
-                        <span class="inline-block text-xs font-semibold px-3 py-1 bg-slate-100 rounded-full text-slate-600">1 kW a 99 kW</span>
+                        <span class="inline-block text-xs font-semibold px-3 py-1 bg-slate-100 rounded-full text-slate-700">1 kW a 20 kW</span>
                     </div>
 
-                    <div onclick="selectTipoProyecto('utility')" id="card-tipo-utility" class="tipo-card group cursor-pointer border-2 border-slate-200 rounded-3xl p-6 text-center hover:border-brand-500 hover:shadow-lg transition-all duration-200 bg-white">
-                        <div class="w-16 h-16 rounded-2xl bg-blue-100 group-hover:bg-blue-600 text-blue-600 group-hover:text-white mx-auto flex items-center justify-center text-3xl mb-4 transition">
-                            <i class="fa-solid fa-solar-panel"></i>
+                    <!-- Industrial (Nuevo) -->
+                    <div onclick="selectTipoProyecto('industrial')" id="card-tipo-industrial" class="tipo-card group cursor-pointer border-2 border-slate-200 rounded-3xl p-5 text-center hover:border-brand-500 hover:shadow-lg transition-all duration-200 bg-white flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-orange-100 group-hover:bg-brand-500 text-orange-600 group-hover:text-slate-950 mx-auto flex items-center justify-center text-2xl mb-3 transition">
+                                <i class="fa-solid fa-industry"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-slate-900 mb-1">Industrial</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3">Pymes, galpones industriales, talleres y comercios medianos.</p>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-900 mb-1">Utility / Parque Solar</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed mb-3">Grandes plantas solares, proyectos industriales y granjas fotovoltaicas.</p>
-                        <span class="inline-block text-xs font-semibold px-3 py-1 bg-slate-100 rounded-full text-slate-600">100 kW a 500+ kW</span>
+                        <span class="inline-block text-xs font-semibold px-3 py-1 bg-slate-100 rounded-full text-slate-700">10 kW a 100 kW</span>
                     </div>
 
-                    <div onclick="selectTipoProyecto('carport')" id="card-tipo-carport" class="tipo-card group cursor-pointer border-2 border-slate-200 rounded-3xl p-6 text-center hover:border-brand-500 hover:shadow-lg transition-all duration-200 bg-white">
-                        <div class="w-16 h-16 rounded-2xl bg-emerald-100 group-hover:bg-emerald-600 text-emerald-600 group-hover:text-white mx-auto flex items-center justify-center text-3xl mb-4 transition">
-                            <i class="fa-solid fa-car-side"></i>
+                    <!-- Utility / Parque Solar -->
+                    <div onclick="selectTipoProyecto('utility')" id="card-tipo-utility" class="tipo-card group cursor-pointer border-2 border-slate-200 rounded-3xl p-5 text-center hover:border-brand-500 hover:shadow-lg transition-all duration-200 bg-white flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-blue-100 group-hover:bg-blue-600 text-blue-600 group-hover:text-white mx-auto flex items-center justify-center text-2xl mb-3 transition">
+                                <i class="fa-solid fa-solar-panel"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-slate-900 mb-1">Utility / Parque</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3">Grandes plantas solares, inyección masiva a red y granjas solares.</p>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-900 mb-1">Carport Solar</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed mb-3">Cubiertas fotovoltaicas para cocheras y playas de estacionamiento comerciales.</p>
-                        <span class="inline-block text-xs font-semibold px-3 py-1 bg-slate-100 rounded-full text-slate-600">5 kW a 150 kW</span>
+                        <span class="inline-block text-xs font-semibold px-3 py-1 bg-slate-100 rounded-full text-slate-700">100 kW a 500+ kW</span>
+                    </div>
+
+                    <!-- Carport Solar -->
+                    <div onclick="selectTipoProyecto('carport')" id="card-tipo-carport" class="tipo-card group cursor-pointer border-2 border-slate-200 rounded-3xl p-5 text-center hover:border-brand-500 hover:shadow-lg transition-all duration-200 bg-white flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-emerald-100 group-hover:bg-emerald-600 text-emerald-600 group-hover:text-white mx-auto flex items-center justify-center text-2xl mb-3 transition">
+                                <i class="fa-solid fa-car-side"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-slate-900 mb-1">Carport Solar</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3">Cubiertas fotovoltaicas para cocheras y playas de estacionamiento.</p>
+                        </div>
+                        <span class="inline-block text-xs font-semibold px-3 py-1 bg-slate-100 rounded-full text-slate-700">5 kW a 150 kW</span>
                     </div>
                 </div>
 
-                <div class="flex justify-end max-w-4xl mx-auto mt-10">
+                <!-- Identificador Orgánico del Cliente (Opcional en Paso 1, editable en Paso 5) -->
+                <div class="max-w-6xl mx-auto mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-sm shrink-0">
+                                <i class="fa-solid fa-user-tag"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-800">Identificación del Cliente / Proyecto <span class="text-slate-400 font-normal lowercase">(opcional)</span></h4>
+                                <p class="text-[11px] text-slate-500">Para guardar y encontrar este presupuesto rápidamente en tu historial.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 flex-1 max-w-2xl">
+                            <div>
+                                <input type="text" id="inp-cliente-id-p1" oninput="sincronizarDatosCliente('id', this.value)" placeholder="ID (Ej: GSE-001)" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs font-mono font-bold text-slate-800 focus:ring-2 focus:ring-brand-500 outline-none">
+                            </div>
+                            <div class="sm:col-span-1">
+                                <input type="text" id="inp-cliente-nombre-p1" oninput="sincronizarDatosCliente('nombre', this.value)" placeholder="Cliente / Empresa..." class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-brand-500 outline-none">
+                            </div>
+                            <div>
+                                <input type="text" id="inp-cliente-ubicacion-p1" oninput="sincronizarDatosCliente('ubicacion', this.value)" placeholder="Localidad / Obra..." class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs text-slate-700 focus:ring-2 focus:ring-brand-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end max-w-6xl mx-auto mt-8">
                     <button onclick="irAPaso(2)" id="btn-next-1" disabled class="px-8 py-3 rounded-xl bg-slate-300 text-slate-500 font-bold text-sm cursor-not-allowed transition flex items-center gap-2">
                         <span>Continuar</span> <i class="fa-solid fa-arrow-right"></i>
                     </button>
@@ -168,12 +252,12 @@
                 </div>
             </div>
 
-            <!-- PASO 3: Tensión & Baterías -->
+            <!-- PASO 3: Tensión & Baterías & Consumo Promedio Mensual -->
             <div id="step-section-3" class="step-content hidden bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200">
                 <div class="max-w-3xl mx-auto text-center mb-8">
                     <span class="text-xs uppercase tracking-wider font-extrabold text-amber-600 bg-amber-50 px-3 py-1 rounded-full">Paso 3 de 5</span>
-                    <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Configuración Eléctrica y Almacenamiento</h2>
-                    <p class="text-slate-500 text-sm mt-1">Elegí el nivel de tensión de acople y si el sistema dispondrá de banco de baterías.</p>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Configuración Eléctrica, Consumo y Almacenamiento</h2>
+                    <p class="text-slate-500 text-sm mt-1">Elegí el nivel de tensión de acople, acumuladores e ingresá el consumo de la factura eléctrica.</p>
                 </div>
 
                 <div class="max-w-3xl mx-auto space-y-8">
@@ -209,10 +293,14 @@
 
                     <!-- Almacenamiento -->
                     <div>
-                        <label class="block text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-car-battery text-brand-500"></i> Almacenamiento de Energía:
-                        </label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="block text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-car-battery text-brand-500"></i> Almacenamiento de Energía:
+                            </label>
+                            <span id="badge-almacenamiento-estado" class="text-xs font-semibold text-slate-500"></span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="contenedor-opciones-baterias">
                             <label onclick="selectBaterias('sin_baterias')" id="opt-bat-sin" class="flex items-center justify-between p-4 rounded-2xl border-2 border-slate-200 cursor-pointer hover:border-brand-500 transition">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 text-lg">
@@ -220,7 +308,7 @@
                                     </div>
                                     <div>
                                         <p class="font-bold text-slate-900">Sin Almacenamiento</p>
-                                        <p class="text-xs text-slate-500">Consumo directo en horas de sol</p>
+                                        <p class="text-xs text-slate-500">Inyección y consumo directo en sol</p>
                                     </div>
                                 </div>
                                 <i class="fa-solid fa-circle-check text-xl text-slate-300 check-icon"></i>
@@ -238,6 +326,38 @@
                                 </div>
                                 <i class="fa-solid fa-circle-check text-xl text-slate-300 check-icon"></i>
                             </label>
+                        </div>
+                        <p id="aviso-almacenamiento" class="hidden text-xs mt-2 text-slate-500 flex items-center gap-1.5"></p>
+                    </div>
+
+                    <!-- PASO INTERMEDIO: Consumo Medido Mensual (Factura de Luz) -->
+                    <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 rounded-3xl p-5 sm:p-6 shadow-sm">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="space-y-1">
+                                <label for="input-consumo-kwh" class="block text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                                    <i class="fa-solid fa-file-invoice-dollar text-brand-500 text-base"></i> Consumo Medido Promedio Mensual:
+                                </label>
+                                <p class="text-xs text-slate-600">
+                                    Dato a extraer de la factura del distribuidor eléctrico del lugar (ej: EDET, Edenor, Edesur).
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <div class="relative">
+                                    <input type="number" id="input-consumo-kwh" min="0" max="100000" step="10" placeholder="Ej: 450" 
+                                           oninput="actualizarConsumoFactura(this.value)"
+                                           class="w-36 text-center font-black text-lg py-2.5 px-3 rounded-2xl border-2 border-amber-300 bg-white text-slate-900 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 shadow-sm">
+                                    <span class="absolute right-3 top-3 text-xs font-bold text-slate-400 pointer-events-none">kWh</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Predimensionamiento según factura -->
+                        <div id="box-sugerencia-potencia" class="hidden mt-4 pt-4 border-t border-amber-200 flex flex-wrap items-center justify-between text-xs gap-2">
+                            <div class="flex items-center gap-2 text-slate-800">
+                                <span class="w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs">💡</span>
+                                <span>Potencia recomendada para compensar tu factura: <strong id="lbl-potencia-sugerida-factura" class="text-slate-950 font-black text-sm bg-white px-2 py-0.5 rounded-lg border border-amber-300">~3.5 kWp</strong></span>
+                            </div>
+                            <span class="text-[11px] text-slate-500 italic">Basado en ~4.3 Horas Sol Pico (HSP) promedio</span>
                         </div>
                     </div>
                 </div>
@@ -267,15 +387,15 @@
                             <span id="lbl-potencia-valor">5</span>
                             <span class="text-2xl text-slate-400 font-bold ml-2">kWp</span>
                         </div>
-                        <p id="lbl-estimacion-paneles" class="text-xs sm:text-sm text-slate-500 mt-2 font-medium">Equivale aproximadamente a ~9 paneles solares de 550W</p>
+                        <p id="lbl-estimacion-paneles" class="text-xs sm:text-sm text-slate-500 mt-2 font-medium">Equivale aproximadamente a ~8 paneles solares de 650Wp</p>
                     </div>
 
                     <div class="space-y-4 px-2">
-                        <input type="range" id="slider-potencia" min="1" max="99" step="1" value="5" oninput="actualizarSliderPotencia(this.value)" class="w-full">
+                        <input type="range" id="slider-potencia" min="1" max="20" step="1" value="5" oninput="actualizarSliderPotencia(this.value)" class="w-full">
                         <div class="flex justify-between text-xs font-bold text-slate-400">
                             <span id="lbl-slider-min">1 kW</span>
-                            <span id="lbl-slider-mid">50 kW</span>
-                            <span id="lbl-slider-max">99 kW</span>
+                            <span id="lbl-slider-mid">10 kW</span>
+                            <span id="lbl-slider-max">20 kW</span>
                         </div>
                     </div>
 
@@ -286,11 +406,11 @@
                         </div>
                         <div class="bg-white p-3 rounded-2xl border border-slate-100">
                             <p class="text-slate-400 font-medium">Área Mín. Techo</p>
-                            <p id="lbl-area-est" class="text-sm font-bold text-slate-800 mt-0.5">~25 m²</p>
+                            <p id="lbl-area-est" class="text-sm font-bold text-slate-800 mt-0.5">~21 m²</p>
                         </div>
                         <div class="bg-white p-3 rounded-2xl border border-slate-100">
-                            <p class="text-slate-400 font-medium">Ratio Mercado</p>
-                            <p id="lbl-ratio-referencia" class="text-sm font-bold text-emerald-600 mt-0.5">1.15 - 1.50 USD/W</p>
+                            <p class="text-slate-400 font-medium">Ratio Referencial</p>
+                            <p id="lbl-ratio-referencia" class="text-sm font-bold text-emerald-600 mt-0.5">1.25 - 1.50 USD/W</p>
                         </div>
                     </div>
                 </div>
@@ -308,33 +428,52 @@
             <!-- PASO 5: Equipamiento & Presupuestador -->
             <div id="step-section-5" class="step-content hidden space-y-6">
 
-                <!-- Resumen de configuración del asistente -->
-                <div class="bg-slate-900 text-white rounded-3xl p-6 shadow-md flex flex-wrap items-center justify-between gap-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-12 h-12 rounded-2xl bg-brand-500 text-slate-950 flex items-center justify-center text-xl font-black">
-                            <i class="fa-solid fa-bolt"></i>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <h3 class="text-xl font-black text-white" id="summary-titulo">Proyecto Residencial On-Grid</h3>
-                                <span class="bg-emerald-500/20 text-emerald-300 text-xs px-2.5 py-0.5 rounded-full border border-emerald-500/30" id="summary-potencia">5 kWp</span>
+                <!-- Resumen de configuración del asistente + Datos del Cliente -->
+                <div class="bg-slate-900 text-white rounded-3xl p-6 shadow-md space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-500 text-slate-950 flex items-center justify-center text-xl font-black shrink-0">
+                                <i class="fa-solid fa-bolt"></i>
                             </div>
-                            <p class="text-xs text-slate-400 mt-0.5" id="summary-detalles">Tensión: Monofásica 220V &bull; Sin Baterías</p>
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h3 class="text-xl font-black text-white" id="summary-titulo">Proyecto Residencial On-Grid</h3>
+                                    <span class="bg-emerald-500/20 text-emerald-300 text-xs px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-bold" id="summary-potencia">5 kWp</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-0.5" id="summary-detalles">Tensión: Monofásica 220V &bull; Sin Baterías</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <button onclick="confirmarReinicioWizard('reconfigurar')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition flex items-center gap-1.5 border border-slate-700">
+                                <i class="fa-solid fa-pen-to-square"></i> Reconfigurar
+                            </button>
+                            <button onclick="autoCompletarKits()" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-armar Kit Sugerido
+                            </button>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="irAPaso(1)" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-pen-to-square"></i> Reconfigurar
-                        </button>
-                        <button onclick="autoCompletarKits()" class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-armar Kit Sugerido
-                        </button>
+
+                    <!-- Barra de identificación del Cliente en Paso 5 -->
+                    <div class="pt-4 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="flex items-center gap-2 bg-slate-800/80 rounded-xl px-3 py-2 border border-slate-700/80">
+                            <span class="text-[11px] font-bold uppercase text-amber-400 shrink-0"><i class="fa-solid fa-hashtag mr-1"></i>Código:</span>
+                            <input type="text" id="inp-cliente-id-p5" oninput="sincronizarDatosCliente('id', this.value)" placeholder="GSE-001" class="bg-transparent text-white text-xs font-mono font-bold w-full outline-none placeholder-slate-500">
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-800/80 rounded-xl px-3 py-2 border border-slate-700/80">
+                            <span class="text-[11px] font-bold uppercase text-amber-400 shrink-0"><i class="fa-solid fa-user mr-1"></i>Cliente:</span>
+                            <input type="text" id="inp-cliente-nombre-p5" oninput="sincronizarDatosCliente('nombre', this.value)" placeholder="Nombre del cliente o empresa..." class="bg-transparent text-white text-xs font-semibold w-full outline-none placeholder-slate-500">
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-800/80 rounded-xl px-3 py-2 border border-slate-700/80">
+                            <span class="text-[11px] font-bold uppercase text-amber-400 shrink-0"><i class="fa-solid fa-location-dot mr-1"></i>Obra:</span>
+                            <input type="text" id="inp-cliente-ubicacion-p5" oninput="sincronizarDatosCliente('ubicacion', this.value)" placeholder="Localidad / Provincia..." class="bg-transparent text-white text-xs w-full outline-none placeholder-slate-500">
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Layout 2 Columnas: Izquierda Selector Manual (1/3) | Derecha Tabla de Cotización (2/3) -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
 
-                    <!-- Columna Izquierda: Agregar Equipamiento -->
+                    <!-- Columna Izquierda: Agregar Equipamiento Manualmente -->
                     <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 lg:col-span-1 space-y-5">
                         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
@@ -342,10 +481,16 @@
                             </h3>
                             <div class="flex items-center gap-1.5 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-200 text-xs">
                                 <span class="text-amber-900 font-semibold">Markup:</span>
-                                <input type="number" id="cfg-markup-global" value="45" min="0" max="200" onchange="actualizarMarkupGlobal(this.value)" class="w-12 bg-white border border-amber-300 rounded text-center font-bold text-amber-950 text-xs outline-none">
+                                <input type="number" id="cfg-markup-global" value="50" min="0" max="200" onchange="actualizarMarkupGlobal(this.value)" class="w-12 bg-white border border-amber-300 rounded text-center font-bold text-amber-950 text-xs outline-none">
                                 <span class="font-bold text-amber-900">%</span>
                             </div>
                         </div>
+
+                        <!-- Botón rápido Auto-armado también disponible en columna izquierda -->
+                        <button onclick="autoCompletarKits()" class="w-full py-2.5 px-4 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-950 font-bold text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i>
+                            <span>Auto-armar Kit Sugerido</span>
+                        </button>
 
                         <!-- Selector Categoría -->
                         <div>
@@ -371,21 +516,21 @@
                             </select>
                         </div>
 
-                        <!-- Card de detalle del ítem seleccionado -->
+                        <!-- Card de detalle del ítem seleccionado (Sin IVA) -->
                         <div id="box-item-preview" class="hidden bg-slate-50 rounded-2xl p-4 border border-slate-200 text-xs space-y-2">
                             <p class="font-semibold text-slate-800 line-clamp-2" id="prev-desc">-</p>
                             <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200">
                                 <div>
-                                    <span class="text-slate-400 block">Costo Base:</span>
+                                    <span class="text-slate-400 block">Costo Base (s/IVA):</span>
                                     <span class="font-bold text-slate-700" id="prev-costo">$0 USD</span>
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-slate-400 block">Precio Venta (c/Markup):</span>
+                                    <span class="text-slate-400 block">Venta Neto (s/IVA):</span>
                                     <span class="font-black text-emerald-600 text-sm" id="prev-precio-venta">$0 USD</span>
                                 </div>
                             </div>
                             <div class="flex justify-between items-center text-[11px] pt-1 text-slate-500">
-                                <span>IVA aplicable: <b id="prev-iva">21%</b></span>
+                                <span>IVA del ítem: <b id="prev-iva">21%</b></span>
                                 <span class="font-semibold text-amber-700" id="prev-disp">En stock</span>
                             </div>
                         </div>
@@ -412,10 +557,10 @@
                                     <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                                         <i class="fa-solid fa-list-check text-emerald-600"></i> Detalle de la Cotización
                                     </h3>
-                                    <p class="text-xs text-slate-400">Precios de venta calculados con tu margen comercial.</p>
+                                    <p class="text-xs text-slate-400">Ítems expresados a valor neto <b>sin IVA</b>. El IVA se adiciona al pie como un ítem más.</p>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <button onclick="vaciarCotizacion()" class="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2 py-1 rounded-lg hover:bg-rose-50 transition">
+                                    <button onclick="vaciarCotizacion()" class="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2.5 py-1.5 rounded-lg hover:bg-rose-50 transition">
                                         <i class="fa-solid fa-trash-can mr-1"></i> Vaciar
                                     </button>
                                 </div>
@@ -428,8 +573,8 @@
                                         <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
                                             <th class="py-2.5 px-3">Cant</th>
                                             <th class="py-2.5 px-3">Descripción</th>
-                                            <th class="py-2.5 px-3 text-right">P. Unit Venta</th>
-                                            <th class="py-2.5 px-3 text-right">Subtotal</th>
+                                            <th class="py-2.5 px-3 text-right">P. Unit (s/IVA)</th>
+                                            <th class="py-2.5 px-3 text-right">Subtotal (s/IVA)</th>
                                             <th class="py-2.5 px-3 text-center">Acción</th>
                                         </tr>
                                     </thead>
@@ -461,21 +606,24 @@
 
                                 <div class="space-y-1.5 text-right text-xs">
                                     <div class="flex justify-between text-slate-600">
-                                        <span>Subtotal Materiales:</span>
+                                        <span>Subtotal Neto (Sin IVA):</span>
                                         <span class="font-bold text-slate-800" id="tot-subtotal">$0.00 USD</span>
                                     </div>
                                     <div class="flex justify-between text-slate-600">
-                                        <span>IVA Estimado:</span>
-                                        <span class="font-bold text-slate-800" id="tot-iva">$0.00 USD</span>
+                                        <span>Ítem IVA (Impuestos):</span>
+                                        <span class="font-bold text-amber-700" id="tot-iva">$0.00 USD</span>
                                     </div>
                                     <div class="flex justify-between text-sm font-black text-slate-900 pt-1.5 border-t border-slate-200">
-                                        <span>Total Proyecto:</span>
+                                        <span>Total Final (c/IVA):</span>
                                         <span class="text-lg font-black text-emerald-600" id="tot-final">$0.00 USD</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="flex flex-wrap sm:flex-nowrap gap-3 mt-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                                <button onclick="guardarPresupuestoActual()" class="w-full bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow">
+                                    <i class="fa-solid fa-floppy-disk"></i> <span>Guardar Presupuesto (Cliente)</span>
+                                </button>
                                 <button onclick="window.print()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow">
                                     <i class="fa-solid fa-file-pdf"></i> <span>Imprimir / Exportar Presupuesto</span>
                                 </button>
@@ -529,7 +677,7 @@
                     </div>
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center">
                         <p class="text-slate-400 text-xs">Markup Global</p>
-                        <p class="text-xl font-black text-amber-600 mt-1" id="stat-markup-val">45%</p>
+                        <p class="text-xl font-black text-amber-600 mt-1" id="stat-markup-val">50%</p>
                     </div>
                 </div>
 
